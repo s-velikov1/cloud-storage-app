@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/auth.service';
+import UserRegistrationData from '../types/models/user-registration-data.type';
 
 export class AuthController {
   private authService: AuthService;
@@ -10,10 +11,21 @@ export class AuthController {
     this.authService = authService;
   }
 
-  async register(req: Request, res: Response) {
-    const message: string = await this.authService.register(req.body);
+  async register(req: Request, res: Response, next: NextFunction) {
+    const userData: UserRegistrationData = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    };
+
+    const user = await this.authService.register(userData);
+    
     res.status(200).json({
-      message: `message from auth controller + ${message}`
+      success: true,
+      data: {
+        user
+      }
     });
   }
 }
