@@ -2,7 +2,6 @@ import User from '../models/user.model';
 import ApiError from '../exceptions/api.error';
 import UserRegistrationData from '../types/models/user-registration-data.type';
 import bcrypt from 'bcrypt';
-import { generateRandomSalt } from '../utils/crypto.utils';
 
 export default class AuthService {
   async register(data: UserRegistrationData) {
@@ -13,8 +12,7 @@ export default class AuthService {
       firstName: data.firstName || '',
       lastName: data.lastName || '',
       email: data.email,
-      password: hashedPassword,
-      salt
+      password: hashedPassword
     });
 
     await user.save();

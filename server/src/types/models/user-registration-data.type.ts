@@ -3,4 +3,5 @@ export default interface UserRegistrationData {
   lastName?: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }

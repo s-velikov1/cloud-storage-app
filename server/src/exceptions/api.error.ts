@@ -1,5 +1,7 @@
+import { ValidationError } from 'express-validator';
+
 export default class ApiError extends Error {
-  constructor(public statusCode: number, message: string, public errors = []) {
+  constructor(public statusCode: number, message: string, public errors: ValidationError[] = []) {
     super(message);
     this.name = this.constructor.name;
     this.errors = errors;
@@ -10,7 +12,8 @@ export default class ApiError extends Error {
     return new ApiError(401, 'User is not authorized');
   }
 
-  static BadRequest(message: string, errors = []) {
+  static BadRequest(message: string, errors: ValidationError[] = []) {
+    console.log(errors);
     return new ApiError(400, message, errors);
   }
 

@@ -22,10 +22,6 @@ const userSchema = new Schema({
     max: 32,
     require: true
   },
-  salt: {
-    type: Buffer,
-    required: true
-  },
   spaceLimit: {
     type: Number,
     default: 1024 ** 3 // 1GB of default space for a user
