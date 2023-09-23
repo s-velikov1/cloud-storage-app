@@ -13,7 +13,6 @@ export default class ApiError extends Error {
   }
 
   static BadRequest(message: string, errors: ValidationError[] = []) {
-    console.log(errors);
     return new ApiError(400, message, errors);
   }
 

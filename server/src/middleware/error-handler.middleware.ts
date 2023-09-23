@@ -1,18 +1,38 @@
 import { Request, Response, NextFunction } from "express"
 import ApiError from "../exceptions/api.error";
+import { ValidationError } from "express-validator";
+
+interface ErrorResponseObj {
+  message: string;
+  errors?: ValidationError[];
+  stack?: string
+}
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  if (err instanceof ApiError) {
-    return res.status(err.statusCode).json({
-      message: err.message,
-      errors: err.errors,
-      stack: err.stack
-    });
+  const isDevelopmentInstance = process.env.NODE_ENV === 'development';
+  if (isDevelopmentInstance) {
+    console.error(err);
   }
 
-  return res.status(500).json({
-    error: err.message,
-    stack: err.stack
-  });
+  if (err instanceof ApiError) {
+    const responseObj: ErrorResponseObj = {
+      message: err.message,
+      errors: err.errors,
+    };
+
+    if (isDevelopmentInstance) {
+      responseObj.stack = err.stack;
+    }
+    return res.status(err.statusCode).json(responseObj);
+  }
+
+  const responseObj: ErrorResponseObj = {
+    message: err.message
+  };
+
+  if (isDevelopmentInstance) {
+    responseObj.stack = err.stack
+  }
+
+  return res.status(500).json(responseObj);
 }
